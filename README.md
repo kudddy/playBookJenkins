@@ -30,7 +30,7 @@ docker run --privileged -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins
 ```
 Запуск демона на агенте:
 ```
-dockerd &
+sudo dockerd &
 ```
 Проблемы:
 1. Получается запустить только c максимальными привелегиями
