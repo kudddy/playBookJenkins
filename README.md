@@ -20,12 +20,20 @@ RUN apt-get update  -qq \
 # RUN usermod -aG docker jenkins
 
 ```
-Запуск контейнера:
+Запуск контейнера на один раз:
 ```
 docker run --privileged -p 8080:8080 -p 50000:50000 jenkins_me
 ```
+Запуск контейнера с сохранением данных предыдущей сессии
+```
+docker run --privileged -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins_me
+```
+Запуск демона на агенте:
+```
+
+```
 Проблемы:
-1. Получается запустить только максимальными привелегиями
+1. Получается запустить только c максимальными привелегиями
 
 ## Сборка проекта
 Ansible скрипт управления сборкой
@@ -44,6 +52,28 @@ pipeline {
       }   
     }
   }
+}
+```
+Скрипт с пушом и логином
+```
+pipeline {
+    agent any
+    stages {
+        stage('Build image') {
+            steps {
+                echo 'Starting to build docker image'
+
+                script {
+                    echo 'logging in docker'
+                    sh "docker login -u username -p pass"
+                    echo 'build image'
+                    def customImage = docker.build("kudddy/catcher")
+                    echo 'push image'
+                    customImage.push()
+                }
+            }
+        }
+    }
 }
 ```
 
